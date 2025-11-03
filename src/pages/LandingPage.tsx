@@ -16,7 +16,9 @@ export default function LandingPage({ onNavigate, onEventClick }: LandingPagePro
   const [locationPlaceholder, setLocationPlaceholder] = useState('Detecting location...');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const categoriesRef = React.useRef<HTMLDivElement>(null);
+  const cantMissRef = React.useRef<HTMLDivElement>(null);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
+  const [showCantMissLeftArrow, setShowCantMissLeftArrow] = useState(false);
   const [locationSuggestions, setLocationSuggestions] = useState<Array<{display_name: string, lat: string, lon: string}>>([]);
   const [showLocationSuggestions, setShowLocationSuggestions] = useState(false);
   const locationInputRef = React.useRef<HTMLInputElement>(null);
@@ -186,6 +188,17 @@ export default function LandingPage({ onNavigate, onEventClick }: LandingPagePro
       attendees: 2000,
       category: 'Fitness',
       price: 'Free'
+    },
+    {
+      id: '13',
+      title: 'Kenya Marathon Championship',
+      image: 'https://images.pexels.com/photos/2526878/pexels-photo-2526878.jpeg?auto=compress&cs=tinysrgb&w=800',
+      date: 'Sun, Nov 10',
+      time: '6:00 AM',
+      location: 'Nairobi CBD',
+      attendees: 2000,
+      category: 'Fitness',
+      price: 'Free'
     }
   ];
 
@@ -231,11 +244,34 @@ export default function LandingPage({ onNavigate, onEventClick }: LandingPagePro
     }
   };
 
+  const handleCantMissScroll = () => {
+    if (cantMissRef.current) {
+      setShowCantMissLeftArrow(cantMissRef.current.scrollLeft > 0);
+    }
+  };
+
+  const scrollCantMiss = (direction: 'left' | 'right') => {
+    if (!cantMissRef.current) return;
+    const scrollAmount = 600;
+    cantMissRef.current.scrollBy({
+      left: direction === 'right' ? scrollAmount : -scrollAmount,
+      behavior: 'smooth'
+    });
+  };
+
   React.useEffect(() => {
     const element = categoriesRef.current;
     if (element) {
       element.addEventListener('scroll', handleCategoryScroll);
       return () => element.removeEventListener('scroll', handleCategoryScroll);
+    }
+  }, []);
+
+  React.useEffect(() => {
+    const element = cantMissRef.current;
+    if (element) {
+      element.addEventListener('scroll', handleCantMissScroll);
+      return () => element.removeEventListener('scroll', handleCantMissScroll);
     }
   }, []);
 
@@ -540,7 +576,7 @@ export default function LandingPage({ onNavigate, onEventClick }: LandingPagePro
         </div>
 
         <div className="relative">
-          <div className="overflow-x-auto scrollbar-hide">
+          <div ref={cantMissRef} className="overflow-x-auto scrollbar-hide">
             <div className="flex gap-6 pb-4">
               {cantMissEvents.map((event) => (
                 <div
@@ -549,7 +585,7 @@ export default function LandingPage({ onNavigate, onEventClick }: LandingPagePro
                   onClick={() => onEventClick(event.id)}
                 >
                   <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
-                    <div className="relative h-48">
+                    <div className="relative h-36">
                       <img
                         src={event.image}
                         alt={event.title}
@@ -634,6 +670,20 @@ export default function LandingPage({ onNavigate, onEventClick }: LandingPagePro
               ))}
             </div>
           </div>
+
+          {/* Scroll Arrows for Can't Miss */}
+          <button
+            onClick={() => scrollCantMiss('left')}
+            className={`hidden lg:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 w-12 h-12 bg-white rounded-full items-center justify-center shadow-xl hover:bg-gray-50 transition-all z-10 ${showCantMissLeftArrow ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+          >
+            <ChevronLeft className="w-6 h-6 text-gray-900" />
+          </button>
+          <button
+            onClick={() => scrollCantMiss('right')}
+            className="hidden lg:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 w-12 h-12 bg-white rounded-full items-center justify-center shadow-xl hover:bg-gray-50 transition-all z-10"
+          >
+            <ChevronRight className="w-6 h-6 text-gray-900" />
+          </button>
         </div>
       </div>
 
