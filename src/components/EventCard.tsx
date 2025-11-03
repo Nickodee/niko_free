@@ -1,4 +1,4 @@
-import { Calendar, MapPin, Users, Heart, Share2 } from 'lucide-react';
+import { Calendar, MapPin, Heart, Share2 } from 'lucide-react';
 import { useState } from 'react';
 
 interface EventCardProps {
@@ -33,12 +33,13 @@ export default function EventCard({
       className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer border border-gray-100 relative"
       onClick={() => onClick(id)}
     >
-      <div className="relative overflow-hidden aspect-[4/3]">
+      <div className="relative overflow-hidden aspect-[16/9]">
         <img
           src={image}
           alt={title}
-          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-80 group-hover:opacity-100"
         />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-white/20"></div>
         <div className="absolute top-3 right-3 flex flex-col space-y-2">
           <button
             onClick={(e) => {
@@ -51,13 +52,13 @@ export default function EventCard({
           </button>
         </div>
         <div className="absolute top-3 left-3">
-          <span className="px-3 py-1 bg-blue-600 text-white text-xs font-semibold rounded-full">
+          <span className="px-3 py-1 bg-blue-600/90 backdrop-blur-sm text-white text-xs font-semibold rounded-full">
             {category}
           </span>
         </div>
         {price === 'Free' ? (
           <div className="absolute bottom-3 left-3">
-            <span className="px-3 py-1 bg-green-500 text-white text-xs font-bold rounded-full shadow-lg">
+            <span className="px-3 py-1 bg-green-500/90 backdrop-blur-sm text-white text-xs font-bold rounded-full shadow-lg">
               FREE
             </span>
           </div>
@@ -71,7 +72,7 @@ export default function EventCard({
       </div>
 
       <div className="p-5">
-        <h3 className="font-bold text-lg text-gray-900 mb-3 line-clamp-2 group-hover:text-blue-600 transition-colors">
+        <h3 className="font-bold text-lg text-gray-900 mb-3 truncate group-hover:text-blue-600 transition-colors">
           {title}
         </h3>
 
@@ -85,8 +86,24 @@ export default function EventCard({
             <span className="line-clamp-1">{location}</span>
           </div>
           <div className="flex items-center space-x-2">
-            <Users className="w-4 h-4 text-blue-600" />
-            <span>{attendees} attending</span>
+            <div className="flex -space-x-2">
+              <img
+                src={`https://i.pravatar.cc/150?img=${(parseInt(id) * 3) % 70}`}
+                alt="Attendee"
+                className="w-6 h-6 rounded-full border-2 border-white"
+              />
+              <img
+                src={`https://i.pravatar.cc/150?img=${(parseInt(id) * 3 + 1) % 70}`}
+                alt="Attendee"
+                className="w-6 h-6 rounded-full border-2 border-white"
+              />
+              <img
+                src={`https://i.pravatar.cc/150?img=${(parseInt(id) * 3 + 2) % 70}`}
+                alt="Attendee"
+                className="w-6 h-6 rounded-full border-2 border-white"
+              />
+            </div>
+            <span className="text-sm text-gray-600">+{attendees - 3} attending</span>
           </div>
         </div>
       </div>

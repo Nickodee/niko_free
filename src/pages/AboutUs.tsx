@@ -105,13 +105,7 @@ export default function AboutUs({ onNavigate }: AboutUsProps) {
 
         <div className="text-center">
           <h2 className="text-3xl font-bold text-gray-900 mb-8">Ready to Get Started?</h2>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button
-              onClick={() => onNavigate('create-event')}
-              className="px-8 py-4 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transform hover:scale-105 transition-all shadow-lg"
-            >
-              Create an Event
-            </button>
+          <div className="flex justify-center">
             <button
               onClick={() => onNavigate('become-partner')}
               className="px-8 py-4 bg-white text-blue-600 border-2 border-blue-600 rounded-xl font-bold hover:bg-blue-50 transform hover:scale-105 transition-all"

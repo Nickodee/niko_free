@@ -322,12 +322,13 @@ export default function LandingPage({ onNavigate, onEventClick }: LandingPagePro
                   onClick={() => onEventClick(event.id)}
                 >
                   <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
-                    <div className="relative h-64">
+                    <div className="relative h-48">
                       <img
                         src={event.image}
                         alt={event.title}
-                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 opacity-80 group-hover:opacity-100"
                       />
+                      <div className="absolute inset-0 bg-gradient-to-b from-transparent to-white/20"></div>
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent transition-opacity duration-300 group-hover:opacity-0"></div>
                       
                       <div className="absolute top-3 left-3 transition-opacity duration-300 group-hover:opacity-0">
@@ -370,9 +371,25 @@ export default function LandingPage({ onNavigate, onEventClick }: LandingPagePro
                           <MapPin className="w-4 h-4 mr-2" />
                           <span>{event.location}</span>
                         </div>
-                        <div className="flex items-center text-gray-600 text-sm">
-                          <Users className="w-4 h-4 mr-2" />
-                          <span>{event.attendees} attending</span>
+                        <div className="flex items-center space-x-2">
+                          <div className="flex -space-x-2">
+                            <img
+                              src={`https://i.pravatar.cc/150?img=${(parseInt(event.id) * 3) % 70}`}
+                              alt="Attendee"
+                              className="w-6 h-6 rounded-full border-2 border-white"
+                            />
+                            <img
+                              src={`https://i.pravatar.cc/150?img=${(parseInt(event.id) * 3 + 1) % 70}`}
+                              alt="Attendee"
+                              className="w-6 h-6 rounded-full border-2 border-white"
+                            />
+                            <img
+                              src={`https://i.pravatar.cc/150?img=${(parseInt(event.id) * 3 + 2) % 70}`}
+                              alt="Attendee"
+                              className="w-6 h-6 rounded-full border-2 border-white"
+                            />
+                          </div>
+                          <span className="text-sm text-gray-600">+{event.attendees - 3} attending</span>
                         </div>
                       </div>
                       <button
@@ -439,7 +456,7 @@ export default function LandingPage({ onNavigate, onEventClick }: LandingPagePro
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-4">
           {(selectedCategory ? upcomingEvents.filter(event => event.category === selectedCategory) : upcomingEvents)
             .map(event => (
               <div key={event.id} className="bg-white rounded-xl p-6 transition-colors duration-200 hover:bg-gray-50">

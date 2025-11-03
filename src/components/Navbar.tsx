@@ -1,7 +1,8 @@
-import { Calendar, Menu, X, LogIn } from 'lucide-react';
+import { Menu, X, LogIn } from 'lucide-react';
 import { useState } from 'react';
 import SignupModal from './SignupModal';
 import LoginModal from './LoginModal';
+import logo from '../images/Niko Free Logo.png';
 
 interface NavbarProps {
   onNavigate: (page: string) => void;
@@ -22,12 +23,11 @@ export default function Navbar({ onNavigate, currentPage = 'landing' }: NavbarPr
               onClick={() => onNavigate('landing')}
               className="flex items-center space-x-2"
             >
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-800 rounded-xl flex items-center justify-center transform hover:scale-105 transition-transform">
-                <Calendar className="w-6 h-6 text-white" />
-              </div>
-              <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
-                Niko Free
-              </span>
+              <img 
+                src={logo} 
+                alt="Niko Free Logo" 
+                className="h-10 w-auto transform hover:scale-105 transition-transform"
+              />
             </button>
 
             <div className="hidden md:flex space-x-1">
