@@ -1,5 +1,7 @@
 import { Calendar, Menu, X, LogIn } from 'lucide-react';
 import { useState } from 'react';
+import SignupModal from './SignupModal';
+import LoginModal from './LoginModal';
 
 interface NavbarProps {
   onNavigate: (page: string) => void;
@@ -8,6 +10,8 @@ interface NavbarProps {
 
 export default function Navbar({ onNavigate, currentPage = 'landing' }: NavbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [signupModalOpen, setSignupModalOpen] = useState(false);
+  const [loginModalOpen, setLoginModalOpen] = useState(false);
 
   return (
     <nav className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
@@ -78,11 +82,17 @@ export default function Navbar({ onNavigate, currentPage = 'landing' }: NavbarPr
               Become a Partner
             </button>
             <button
-              onClick={() => onNavigate('user-dashboard')}
-              className="flex items-center space-x-2 px-6 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg font-medium hover:shadow-lg transform hover:scale-105 transition-all"
+              onClick={() => setLoginModalOpen(true)}
+              className="flex items-center space-x-2 px-6 py-2.5 text-gray-700 hover:bg-gray-100 rounded-lg font-medium transition-colors"
             >
               <LogIn className="w-4 h-4" />
-              <span>Log In / Sign Up</span>
+              <span>Log In</span>
+            </button>
+            <button
+              onClick={() => setSignupModalOpen(true)}
+              className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg font-medium hover:shadow-lg transform hover:scale-105 transition-all"
+            >
+              Sign Up
             </button>
           </div>
 
@@ -149,14 +159,40 @@ export default function Navbar({ onNavigate, currentPage = 'landing' }: NavbarPr
               Become a Partner
             </button>
             <button
-              onClick={() => { onNavigate('user-dashboard'); setMobileMenuOpen(false); }}
+              onClick={() => { setLoginModalOpen(true); setMobileMenuOpen(false); }}
+              className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg font-medium"
+            >
+              Log In
+            </button>
+            <button
+              onClick={() => { setSignupModalOpen(true); setMobileMenuOpen(false); }}
               className="block w-full px-4 py-2.5 bg-blue-600 text-white rounded-lg font-medium"
             >
-              Log In / Sign Up
+              Sign Up
             </button>
           </div>
         </div>
       )}
+
+      <SignupModal
+        isOpen={signupModalOpen}
+        onClose={() => setSignupModalOpen(false)}
+        onNavigate={onNavigate}
+        onSwitchToLogin={() => {
+          setSignupModalOpen(false);
+          setLoginModalOpen(true);
+        }}
+      />
+
+      <LoginModal
+        isOpen={loginModalOpen}
+        onClose={() => setLoginModalOpen(false)}
+        onNavigate={onNavigate}
+        onSwitchToSignup={() => {
+          setLoginModalOpen(false);
+          setSignupModalOpen(true);
+        }}
+      />
     </nav>
   );
 }
