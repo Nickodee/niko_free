@@ -1,13 +1,13 @@
-import { Calendar, Heart, History, Download, QrCode, User, Bell, MessageCircle, ChevronLeft, ChevronRight, Users, Menu, X } from 'lucide-react';
-import { useState, useRef } from 'react';
+import { Calendar, Heart, Download, QrCode, Bell, MessageCircle, Users, Check, Bookmark } from 'lucide-react';
+import { useState } from 'react';
 
 interface UserDashboardProps {
   onNavigate: (page: string) => void;
 }
 
 export default function UserDashboard({ onNavigate }: UserDashboardProps) {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
+  const [activeEventsTab, setActiveEventsTab] = useState<'going' | 'saved'>('going');
 
   const userProfile = {
     name: 'Alex Johnson',
@@ -107,17 +107,11 @@ export default function UserDashboard({ onNavigate }: UserDashboardProps) {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Top Navigation */}
-      <nav className="bg-white border-b border-gray-200 fixed top-0 left-0 right-0 z-50 shadow-sm">
-        <div className="px-4 sm:px-6 lg:px-8 py-4">
+      <nav className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
-            {/* Left - Menu & Logo */}
+            {/* Left - Logo */}
             <div className="flex items-center space-x-4">
-              <button
-                onClick={() => setSidebarOpen(true)}
-                className="lg:hidden text-gray-500 hover:text-gray-700"
-              >
-                <Menu className="w-6 h-6" />
-              </button>
               <h1 className="text-xl font-bold text-gray-900">Niko Free</h1>
             </div>
 
@@ -182,111 +176,165 @@ export default function UserDashboard({ onNavigate }: UserDashboardProps) {
       </nav>
 
       {/* Main Content */}
-      <div className="flex pt-16">
-        {/* Mobile Sidebar Overlay */}
-        {sidebarOpen && (
-          <div 
-            className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
-            onClick={() => setSidebarOpen(false)}
-          />
-        )}
-
-        {/* Left Profile Sidebar */}
-        <aside className={`fixed lg:sticky top-16 left-0 z-50 h-[calc(100vh-4rem)] w-80 bg-white border-r border-gray-200 transform transition-transform duration-300 lg:transform-none ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
-        }`}>
-          <div className="h-full overflow-y-auto p-6">
-            {/* Close Button (Mobile) */}
-            <button
-              onClick={() => setSidebarOpen(false)}
-              className="lg:hidden absolute top-4 right-4 text-gray-500 hover:text-gray-700"
-            >
-              <X className="w-6 h-6" />
-            </button>
-
-            {/* Profile Section */}
-            <div className="text-center mb-8">
-              <img
-                src={userProfile.avatar}
-                alt={userProfile.name}
-                className="w-32 h-32 rounded-full object-cover mx-auto mb-4 border-4 border-blue-100"
-              />
-              <h2 className="text-2xl font-bold text-gray-900 mb-1">{userProfile.name}</h2>
-              <p className="text-sm text-gray-500">Joined {userProfile.joinDate}</p>
-            </div>
-
-            {/* User Stats */}
-            <div className="space-y-4">
-              <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-6">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center">
-                    <Calendar className="w-6 h-6 text-white" />
-                  </div>
-                  <span className="text-3xl font-bold text-blue-900">{userProfile.eventsAttended}</span>
-                </div>
-                <p className="text-sm font-semibold text-blue-900">Events Attended</p>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Left Column - Profile & Stats */}
+          <aside className="lg:col-span-3">
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sticky top-24">
+              {/* Profile Section */}
+              <div className="text-center mb-6">
+                <img
+                  src={userProfile.avatar}
+                  alt={userProfile.name}
+                  className="w-24 h-24 rounded-full object-cover mx-auto mb-3 border-4 border-blue-100"
+                />
+                <h2 className="text-xl font-bold text-gray-900 mb-1">{userProfile.name}</h2>
+                <p className="text-sm text-gray-500">Joined {userProfile.joinDate}</p>
               </div>
 
-              <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-2xl p-6">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="w-12 h-12 bg-purple-600 rounded-xl flex items-center justify-center">
-                    <Users className="w-6 h-6 text-white" />
+              {/* User Stats */}
+              <div className="space-y-3 mb-6">
+                <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                      <Calendar className="w-5 h-5 text-white" />
+                    </div>
+                    <span className="text-2xl font-bold text-blue-900">{userProfile.eventsAttended}</span>
                   </div>
-                  <span className="text-3xl font-bold text-purple-900">{userProfile.groupsJoined}</span>
+                  <p className="text-xs font-semibold text-blue-900 mb-3">Your Events</p>
+                  
+                  {/* Tabs */}
+                  <div className="flex gap-2 mb-3">
+                    <button
+                      onClick={() => setActiveEventsTab('going')}
+                      className={`flex-1 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-1 ${
+                        activeEventsTab === 'going'
+                          ? 'bg-blue-600 text-white shadow-sm'
+                          : 'bg-white/50 text-blue-700 hover:bg-white/80'
+                      }`}
+                    >
+                      <Check className="w-3.5 h-3.5" />
+                      <span>Going ({upcomingEvents.length})</span>
+                    </button>
+                    <button
+                      onClick={() => setActiveEventsTab('saved')}
+                      className={`flex-1 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-1 ${
+                        activeEventsTab === 'saved'
+                          ? 'bg-blue-600 text-white shadow-sm'
+                          : 'bg-white/50 text-blue-700 hover:bg-white/80'
+                      }`}
+                    >
+                      <Bookmark className="w-3.5 h-3.5" />
+                      <span>Saved ({bucketlistEvents.filter(e => !e.isOutdated).length})</span>
+                    </button>
+                  </div>
+
+                  {/* Event List */}
+                  <div className="space-y-2 max-h-48 overflow-y-auto">
+                    {activeEventsTab === 'going' ? (
+                      upcomingEvents.slice(0, 3).map((event) => (
+                        <div key={event.id} className="bg-white/70 rounded-lg p-2 hover:bg-white transition-colors">
+                          <div className="flex items-center gap-2">
+                            <img
+                              src={event.image}
+                              alt={event.title}
+                              className="w-10 h-10 rounded object-cover"
+                            />
+                            <div className="flex-1 min-w-0">
+                              <p className="text-xs font-semibold text-blue-900 truncate">{event.title}</p>
+                              <p className="text-xs text-blue-700">{event.date}</p>
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      bucketlistEvents.filter(e => !e.isOutdated).slice(0, 3).map((event) => (
+                        <div key={event.id} className="bg-white/70 rounded-lg p-2 hover:bg-white transition-colors">
+                          <div className="flex items-center gap-2">
+                            <img
+                              src={event.image}
+                              alt={event.title}
+                              className="w-10 h-10 rounded object-cover"
+                            />
+                            <div className="flex-1 min-w-0">
+                              <p className="text-xs font-semibold text-blue-900 truncate">{event.title}</p>
+                              <p className="text-xs text-blue-700">{event.price}</p>
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
                 </div>
-                <p className="text-sm font-semibold text-purple-900">Groups Joined</p>
+
+                <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-4">
+                  <div className="flex items-center justify-between mb-1">
+                    <div className="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center">
+                      <Users className="w-5 h-5 text-white" />
+                    </div>
+                    <span className="text-2xl font-bold text-purple-900">{userProfile.groupsJoined}</span>
+                  </div>
+                  <p className="text-xs font-semibold text-purple-900 mb-3">Groups Joined</p>
+                  
+                  {/* See All Groups Button */}
+                  <button className="w-full py-2 bg-white/50 hover:bg-white text-purple-700 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-1">
+                    <span>See All Groups</span>
+                    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              {/* Quick Actions */}
+              <div className="space-y-2">
+                <button className="w-full py-2.5 bg-blue-600 text-white rounded-xl text-sm font-semibold hover:bg-blue-700 transition-colors">
+                  Browse Events
+                </button>
+                <button className="w-full py-2.5 border-2 border-gray-200 text-gray-700 rounded-xl text-sm font-semibold hover:border-blue-500 hover:text-blue-600 transition-all">
+                  My Tickets
+                </button>
               </div>
             </div>
+          </aside>
 
-            {/* Quick Actions */}
-            <div className="mt-8 space-y-3">
-              <button className="w-full py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-colors">
-                Browse Events
-              </button>
-              <button className="w-full py-3 border-2 border-gray-200 text-gray-700 rounded-xl font-semibold hover:border-blue-500 hover:text-blue-600 transition-all">
-                My Tickets
-              </button>
-            </div>
-          </div>
-        </aside>
-
-        {/* Main Content Area */}
-        <main className="flex-1 overflow-x-hidden p-4 sm:p-6 lg:p-8">
+          {/* Right Column - Events Content */}
+          <main className="lg:col-span-9">
           {/* Events Booked Section */}
           <section className="mb-12">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-gray-900">Events Booked</h2>
               <button className="text-blue-600 hover:text-blue-700 font-semibold text-sm">View All</button>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {upcomingEvents.map((event) => (
                 <div
                   key={event.id}
-                  className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all border border-gray-100"
+                  className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all border border-gray-100"
                 >
-                  <div className="relative h-48">
+                  <div className="relative h-36">
                     <img
                       src={event.image}
                       alt={event.title}
                       className="w-full h-full object-cover"
                     />
-                    <div className="absolute top-3 right-3 bg-green-500 text-white px-3 py-1 rounded-full text-xs font-bold">
+                    <div className="absolute top-2 right-2 bg-green-500 text-white px-2 py-0.5 rounded-full text-xs font-bold">
                       BOOKED
                     </div>
                   </div>
-                  <div className="p-5">
-                    <h3 className="font-bold text-gray-900 mb-2 line-clamp-1">{event.title}</h3>
-                    <div className="space-y-2 text-sm text-gray-600 mb-4">
+                  <div className="p-4">
+                    <h3 className="font-bold text-gray-900 mb-2 line-clamp-1 text-sm">{event.title}</h3>
+                    <div className="space-y-1.5 text-xs text-gray-600 mb-3">
                       <div className="flex items-center space-x-2">
-                        <Calendar className="w-4 h-4 text-blue-600" />
+                        <Calendar className="w-3.5 h-3.5 text-blue-600" />
                         <span>{event.date} • {event.time}</span>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <QrCode className="w-4 h-4 text-blue-600" />
+                        <QrCode className="w-3.5 h-3.5 text-blue-600" />
                         <span className="font-mono text-xs">{event.ticketId}</span>
                       </div>
                     </div>
-                    <button className="w-full py-2.5 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-colors">
+                    <button className="w-full py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors">
                       View Ticket
                     </button>
                   </div>
@@ -301,36 +349,36 @@ export default function UserDashboard({ onNavigate }: UserDashboardProps) {
               <h2 className="text-2xl font-bold text-gray-900">Bucket List</h2>
               <button className="text-blue-600 hover:text-blue-700 font-semibold text-sm">View All</button>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {bucketlistEvents.map((event) => (
                 <div
                   key={event.id}
-                  className={`bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all border border-gray-100 ${
+                  className={`bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all border border-gray-100 ${
                     event.isOutdated ? 'opacity-75' : ''
                   }`}
                 >
-                  <div className="relative h-48">
+                  <div className="relative h-36">
                     <img
                       src={event.image}
                       alt={event.title}
                       className={`w-full h-full object-cover ${event.isOutdated ? 'grayscale' : ''}`}
                     />
                     {event.isOutdated && (
-                      <div className="absolute top-3 right-3 bg-gray-500 text-white px-3 py-1 rounded-full text-xs font-bold">
+                      <div className="absolute top-2 right-2 bg-gray-500 text-white px-2 py-0.5 rounded-full text-xs font-bold">
                         PAST EVENT
                       </div>
                     )}
-                    <button className="absolute top-3 left-3 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-md hover:scale-110 transition-transform">
-                      <Heart className="w-5 h-5 text-red-500 fill-red-500" />
+                    <button className="absolute top-2 left-2 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md hover:scale-110 transition-transform">
+                      <Heart className="w-4 h-4 text-red-500 fill-red-500" />
                     </button>
                   </div>
-                  <div className="p-5">
-                    <h3 className="font-bold text-gray-900 mb-2 line-clamp-1">{event.title}</h3>
-                    <p className="text-sm text-gray-600 mb-4">{event.date}</p>
+                  <div className="p-4">
+                    <h3 className="font-bold text-gray-900 mb-2 line-clamp-1 text-sm">{event.title}</h3>
+                    <p className="text-xs text-gray-600 mb-3">{event.date}</p>
                     <div className="flex items-center justify-between">
-                      <span className="text-lg font-bold text-blue-600">{event.price}</span>
+                      <span className="text-sm font-bold text-blue-600">{event.price}</span>
                       <button 
-                        className={`px-6 py-2.5 rounded-lg font-semibold transition-colors ${
+                        className={`px-4 py-1.5 rounded-lg text-sm font-semibold transition-colors ${
                           event.isOutdated
                             ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
                             : 'bg-blue-600 text-white hover:bg-blue-700'
@@ -352,38 +400,38 @@ export default function UserDashboard({ onNavigate }: UserDashboardProps) {
               <h2 className="text-2xl font-bold text-gray-900">Event History</h2>
               <button className="text-blue-600 hover:text-blue-700 font-semibold text-sm">View All</button>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {eventHistory.map((event) => (
                 <div
                   key={event.id}
-                  className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all border border-gray-100"
+                  className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all border border-gray-100"
                 >
-                  <div className="relative h-48">
+                  <div className="relative h-36">
                     <img
                       src={event.image}
                       alt={event.title}
                       className="w-full h-full object-cover"
                     />
-                    <div className="absolute top-3 right-3 bg-gray-500 text-white px-3 py-1 rounded-full text-xs font-bold">
+                    <div className="absolute top-2 right-2 bg-gray-500 text-white px-2 py-0.5 rounded-full text-xs font-bold">
                       COMPLETED
                     </div>
                   </div>
-                  <div className="p-5">
-                    <h3 className="font-bold text-gray-900 mb-2 line-clamp-1">{event.title}</h3>
-                    <p className="text-sm text-gray-600 mb-3">{event.date}</p>
-                    <div className="flex items-center space-x-1 mb-4">
+                  <div className="p-4">
+                    <h3 className="font-bold text-gray-900 mb-2 line-clamp-1 text-sm">{event.title}</h3>
+                    <p className="text-xs text-gray-600 mb-2">{event.date}</p>
+                    <div className="flex items-center space-x-0.5 mb-3">
                       {[...Array(5)].map((_, i) => (
                         <svg
                           key={i}
-                          className={`w-5 h-5 ${i < event.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300 fill-gray-300'}`}
+                          className={`w-4 h-4 ${i < event.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300 fill-gray-300'}`}
                           viewBox="0 0 20 20"
                         >
                           <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
                         </svg>
                       ))}
                     </div>
-                    <button className="w-full py-2.5 border-2 border-gray-200 text-gray-700 rounded-lg font-semibold hover:border-blue-500 hover:text-blue-600 transition-all flex items-center justify-center space-x-2">
-                      <Download className="w-4 h-4" />
+                    <button className="w-full py-2 border-2 border-gray-200 text-gray-700 rounded-lg text-sm font-semibold hover:border-blue-500 hover:text-blue-600 transition-all flex items-center justify-center space-x-2">
+                      <Download className="w-3.5 h-3.5" />
                       <span>Download Receipt</span>
                     </button>
                   </div>
@@ -391,7 +439,8 @@ export default function UserDashboard({ onNavigate }: UserDashboardProps) {
               ))}
             </div>
           </section>
-        </main>
+          </main>
+        </div>
       </div>
     </div>
   );
