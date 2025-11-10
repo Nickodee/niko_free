@@ -40,16 +40,18 @@ export default function Navbar({ onNavigate, currentPage = 'landing' }: NavbarPr
                 className={`px-2 md:px-3 lg:px-4 py-1 md:py-1.5 lg:py-2 text-xs md:text-sm lg:text-base font-medium transition-colors ${
                   currentPage === 'landing' 
                     ? 'text-white border-b-2'
+                    : currentPage === 'event-detail'
+                    ? 'text-gray-700 dark:text-gray-300 border-b-2'
                     : 'text-gray-700 dark:text-gray-300'
                 }`}
-                style={currentPage === 'landing' ? { color: '#ffffff', borderColor: '#27aae2' } : {}}
+                style={currentPage === 'landing' ? { color: '#ffffff', borderColor: '#27aae2' } : currentPage === 'event-detail' ? { color: '#27aae2', borderColor: '#27aae2' } : {}}
                 onMouseEnter={(e) => { 
-                  if (currentPage !== 'landing') { 
+                  if (currentPage !== 'landing' && currentPage !== 'event-detail') { 
                     e.currentTarget.style.color = '#27aae2'; 
                   } 
                 }}
                 onMouseLeave={(e) => { 
-                  if (currentPage !== 'landing') { 
+                  if (currentPage !== 'landing' && currentPage !== 'event-detail') { 
                     e.currentTarget.style.color = ''; 
                   } 
                 }}
@@ -195,13 +197,13 @@ export default function Navbar({ onNavigate, currentPage = 'landing' }: NavbarPr
             <button
               onClick={() => { onNavigate('landing'); setMobileMenuOpen(false); }}
               className={`block w-full text-left px-4 py-2 rounded-lg ${
-                currentPage === 'landing' 
+                (currentPage === 'landing' || currentPage === 'event-detail')
                   ? 'font-semibold' 
                   : 'text-gray-700 dark:text-gray-300'
               }`}
-              style={currentPage === 'landing' ? { backgroundColor: isDarkMode ? '#1f2937' : '#e6f7ff', color: '#27aae2' } : {}}
-              onMouseEnter={(e) => { if (currentPage !== 'landing') e.currentTarget.style.backgroundColor = isDarkMode ? '#1f2937' : '#e6f7ff'; }}
-              onMouseLeave={(e) => { if (currentPage !== 'landing') e.currentTarget.style.backgroundColor = 'transparent'; }}
+              style={(currentPage === 'landing' || currentPage === 'event-detail') ? { backgroundColor: isDarkMode ? '#1f2937' : '#e6f7ff', color: '#27aae2' } : {}}
+              onMouseEnter={(e) => { if (currentPage !== 'landing' && currentPage !== 'event-detail') e.currentTarget.style.backgroundColor = isDarkMode ? '#1f2937' : '#e6f7ff'; }}
+              onMouseLeave={(e) => { if (currentPage !== 'landing' && currentPage !== 'event-detail') e.currentTarget.style.backgroundColor = 'transparent'; }}
             >
               Home
             </button>

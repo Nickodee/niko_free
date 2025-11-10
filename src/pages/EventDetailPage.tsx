@@ -170,7 +170,7 @@ Don't miss this opportunity to be part of Africa's tech revolution!`,
       }}></div>
       
       <div className="relative z-10">
-        <Navbar onNavigate={onNavigate} />
+        <Navbar onNavigate={onNavigate} currentPage="event-detail" />
 
       <button
         onClick={() => onNavigate('landing')}
@@ -416,12 +416,14 @@ Don't miss this opportunity to be part of Africa's tech revolution!`,
                     height="100%"
                     frameBorder="0"
                     style={{ border: 0 }}
-                    src="https://www.openstreetmap.org/export/embed.html?bbox=36.8170%2C-1.2930%2C36.8270%2C-1.2830&layer=mapnik&marker=-1.2880%2C36.8220"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.8159534114384!2d36.82035431475395!3d-1.2880051359988408!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f10d6d6f8f8f3%3A0x3f0e0e0e0e0e0e0e!2sKenyatta%20International%20Convention%20Centre!5e0!3m2!1sen!2ske!4v1234567890123!5m2!1sen!2ske"
                     allowFullScreen
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
                     title="Event Location Map"
                   ></iframe>
                   <a
-                    href="https://www.openstreetmap.org/?mlat=-1.2880&mlon=36.8220#map=16/-1.2880/36.8220"
+                    href="https://www.google.com/maps/search/?api=1&query=Kenyatta+International+Convention+Centre+Nairobi"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="absolute bottom-2 right-2 bg-white dark:bg-gray-800 px-3 py-1.5 rounded-lg text-xs font-medium text-[#27aae2] hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors shadow-md flex items-center space-x-1"
