@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, MapPin, ChevronLeft, ChevronRight, Dumbbell, Users, Music, Heart, Dog, Car, Sparkles, Brain, Gamepad2, ShoppingBag, Church, Target, Camera, Calendar, Share2, Briefcase, Theater, Truck, Mountain } from 'lucide-react';
+import { Search, MapPin, ChevronLeft, ChevronRight, Dumbbell, Users, Music, Heart, Dog, Car, Sparkles, Brain, Gamepad2, ShoppingBag, Church, Target, Camera, Calendar, Share2, Briefcase, Theater, Bus, Mountain } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import EventCard from '../components/EventCard';
@@ -341,7 +341,7 @@ export default function LandingPage({ onNavigate, onEventClick }: LandingPagePro
 
   const categories = React.useMemo(() => [
     { name: 'All', icon: Users, color: '', count: upcomingEvents.length, iconColor: '#6B7280' },
-    { name: 'Explore-Kenya', icon: Truck, color: 'from-blue-500 to-cyan-500', count: 234, iconColor: '#0EA5E9' },
+    { name: 'Explore-Kenya', displayName: 'Explore- 🇰🇪', icon: Bus, color: 'from-blue-500 to-cyan-500', count: 234, iconColor: '#0EA5E9' },
     { name: 'Hiking', icon: Mountain, color: 'from-green-600 to-teal-600', count: 156, iconColor: '#059669' },
     { name: 'Sports & Fitness', icon: Dumbbell, color: 'from-green-500 to-emerald-500', count: 189, iconColor: '#10B981' },
     { name: 'Social Activities', icon: Users, color: 'from-purple-500 to-pink-500', count: 456, iconColor: '#A855F7' },
@@ -1130,7 +1130,7 @@ export default function LandingPage({ onNavigate, onEventClick }: LandingPagePro
                     <span className={`text-[8px] text-center leading-tight ${
                       isSelected ? 'font-bold text-gray-900 dark:text-white' : 'font-medium text-gray-600 dark:text-gray-400'
                     }`}>
-                      {category.name}
+                      {category.displayName || category.name}
                     </span>
                     <span className="text-[7px] text-gray-500 dark:text-gray-500 mt-0.5">
                       {category.count}
@@ -1181,7 +1181,7 @@ export default function LandingPage({ onNavigate, onEventClick }: LandingPagePro
                       <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-gray-100 dark:bg-gray-800 mb-2 group-hover:scale-110 transition-transform">
                         <Icon className="w-7 h-7" style={{ color: category.iconColor }} />
                       </div>
-                      <span className={`text-sm mb-1 text-center whitespace-nowrap ${isSelected ? 'font-bold text-gray-900 dark:text-white' : 'font-medium text-gray-900 dark:text-gray-300 group-hover:font-bold'}`}>{category.name}</span>
+                      <span className={`text-sm mb-1 text-center whitespace-nowrap ${isSelected ? 'font-bold text-gray-900 dark:text-white' : 'font-medium text-gray-900 dark:text-gray-300 group-hover:font-bold'}`}>{category.displayName || category.name}</span>
                       <span className="text-xs text-gray-500 dark:text-gray-400 text-center whitespace-nowrap">{category.count} events</span>
                       <span className={`absolute left-3 right-3 bottom-0 h-1 rounded-full ${isSelected ? '' : 'bg-gray-200 dark:bg-gray-700'}`} style={isSelected ? { backgroundColor: '#27aae2' } : {}} />
                     </button>
