@@ -43,22 +43,11 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="font-semibold text-lg mb-4">Connect</h3>
-            <ul className="space-y-2 text-sm text-gray-300">
-              <li><button className="hover:text-white transition-colors">Become a Partner</button></li>
-              <li><button className="hover:text-white transition-colors">Create Event</button></li>
-              <li><button className="hover:text-white transition-colors">Partner Resources</button></li>
-              <li><button className="hover:text-white transition-colors">Community Guidelines</button></li>
-              <li><button className="hover:text-white transition-colors">Help Center</button></li>
-            </ul>
-          </div>
-
-          <div>
             <h3 className="font-semibold text-lg mb-4">Company</h3>
             <ul className="space-y-2 text-sm text-gray-300">
               <li><button className="hover:text-white transition-colors">About Us</button></li>
-              <li><button className="hover:text-white transition-colors">Careers</button></li>
-              <li><button className="hover:text-white transition-colors">Press & Media</button></li>
+              {/* <li><button className="hover:text-white transition-colors">Careers</button></li> */}
+              <li><button className="hover:text-white transition-colors">Become a Partner</button></li>
               <li><button className="hover:text-white transition-colors">Privacy Policy</button></li>
               <li><button className="hover:text-white transition-colors">Terms of Service</button></li>
             </ul>

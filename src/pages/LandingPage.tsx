@@ -10,6 +10,8 @@ interface LandingPageProps {
 }
 
 export default function LandingPage({ onNavigate, onEventClick }: LandingPageProps) {
+    // Dots indicator state for Cant Miss events
+    const [cantMissDotIndex, setCantMissDotIndex] = useState(0);
   const [currentBanner, setCurrentBanner] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedLocation, setSelectedLocation] = useState('Detecting location...');
@@ -430,7 +432,24 @@ export default function LandingPage({ onNavigate, onEventClick }: LandingPagePro
     const element = cantMissRef.current;
     if (element) {
       element.addEventListener('scroll', handleCantMissScroll);
-      return () => element.removeEventListener('scroll', handleCantMissScroll);
+      // Listen for scroll to update dot index
+      const handleDotScroll = () => {
+        // Number of event cards per screen (2 for mobile)
+        const cardsPerScreen = 2;
+        const totalDots = 3;
+        const cardWidth = element.offsetWidth / cardsPerScreen;
+        const scrollLeft = element.scrollLeft;
+        // Calculate current dot index
+        const maxIndex = Math.max(0, cantMissEvents.length - cardsPerScreen);
+        let index = Math.round(scrollLeft / cardWidth);
+        if (index > totalDots - 1) index = totalDots - 1;
+        setCantMissDotIndex(index);
+      };
+      element.addEventListener('scroll', handleDotScroll);
+      return () => {
+        element.removeEventListener('scroll', handleCantMissScroll);
+        element.removeEventListener('scroll', handleDotScroll);
+      };
     }
   }, []);
 
@@ -882,7 +901,7 @@ export default function LandingPage({ onNavigate, onEventClick }: LandingPagePro
         </div>
       </div> */}
 
-        <div className="mb-8">
+        <div className="mb-4">
           <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-2 transition-colors duration-200">Can't Miss!</h2>
           <p className="text-xl text-gray-600 dark:text-gray-400 transition-colors duration-200">Promoted events you shouldn't miss</p>
         </div>
@@ -893,11 +912,11 @@ export default function LandingPage({ onNavigate, onEventClick }: LandingPagePro
               {cantMissEvents.map((event) => (
                 <div
                   key={event.id}
-                  className="flex-shrink-0 snap-start snap-always w-[calc(100vw-2rem)] sm:w-[280px] md:w-[300px] lg:w-[calc(25%-18px)] cursor-pointer group"
+                  className="flex-shrink-0 snap-start snap-always w-[calc(50vw-1rem)] sm:w-[280px] md:w-[300px] lg:w-[calc(25%-18px)] cursor-pointer group"
                   onClick={() => onEventClick(event.id)}
                 >
                   <div className="rounded-2xl overflow-hidden h-full">
-                    <div className="relative h-48 sm:h-36 md:h-40">
+                    <div className="relative h-32 sm:h-28 md:h-32">
                       <img
                         src={event.image}
                         alt={event.title}
@@ -994,6 +1013,17 @@ export default function LandingPage({ onNavigate, onEventClick }: LandingPagePro
             </div>
           </div>
 
+          {/* Dots indicator for Cant Miss events */}
+          <div className="flex justify-center mt-1 gap-2">
+            {[0, 1, 2].map((dotIdx) => (
+              <span
+                key={dotIdx}
+                className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${cantMissDotIndex === dotIdx ? 'bg-[#27aae2]' : 'bg-gray-300 dark:bg-gray-600'}`}
+                style={{ opacity: cantMissDotIndex === dotIdx ? 1 : 0.6 }}
+              />
+            ))}
+          </div>
+
           {/* Scroll Arrows for Can't Miss */}
           <button
             onClick={() => scrollCantMiss('left')}
@@ -1010,8 +1040,8 @@ export default function LandingPage({ onNavigate, onEventClick }: LandingPagePro
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-1 sm:px-6 lg:px-10 py-16" data-aos="fade-up">
-        <div className="text-center mb-12">
+      <div className="max-w-7xl mx-auto px-1 sm:px-6 lg:px-10 py-6 md:py-16" data-aos="fade-up">
+        <div className="text-center mb-4">
           <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4 transition-colors duration-200">Browse by Category</h2>
           <p className="text-xl text-gray-600 dark:text-gray-400 transition-colors duration-200">Find events that match your interests</p>
         </div>
